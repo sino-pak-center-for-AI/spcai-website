@@ -1,0 +1,134 @@
+---
+title: Hardware Overview
+---
+
+# Hardware Overview
+
+Our members enjoy access to several resources, including:
+
+## Testbed Systems
+
+### Overview
+
+The Gnosis Research Center (GRC) Lab manages several cluster computers to support the group's research.
+Cluster resources within the lab are controlled via a batch queuing system that coordinates all jobs running
+on the clusters. The nodes should not be accessed directly, as the scheduler will allocate resources such as
+CPU, Memory and Storage exclusively to each job.
+
+Once you have access to use the cluster, you can submit, monitor, and cancel jobs from the head nodes,
+ares.cs.iit.edu and hec.cs.iit.edu. These two nodes should not be used for any compute-intensive work,
+however you can get a shell on a compute node simply by starting an interactive job. You can use the
+cluster by starting batch jobs or interactive jobs. Interactive jobs give you access to a shell on one
+of the nodes, from which you can execute commands by hand, whereas batch jobs run from a given shell
+script in the background and automatically terminate when finished.
+
+If you encounter any problems using the cluster, please send us a request via grc@iit.edu and be as
+specific as you can when describing your issue.
+
+### Usage Policy
+
+Regular members of the GRC enjoy access to the resources. If you wish to gain access to the cluster
+and you do not belong to the core team, please submit and request via grc@iit.edu and state the following:
+(i) your CS login ID, (ii) name of professor you're working with (and put him under cc on the form) (iii)
+reasons for requesting access (i.e., research project description) (iv) projected time period for which you
+would need access (v) resources that you may interfere other uses significantly (e.g., global file system,
+network) (vi) commands that you need to run as root privilege.
+
+If we have any trouble with your job, we will try to get in touch with you but we reserve the right to kill
+your jobs at any time. If you have questions about the cluster, send us a request at grc@iit.edu.
+
+### Local Computing Resources
+
+The GRC manages two cluster computers, Ares and HEC, each for different research scope. Our flagship cluster
+is Ares with 1576 cores and a 30TFLOPs peak performance. HEC is a smaller 128 core machine that specializes to
+network research. All HEC nodes are connected with InfiniBand network powered by Mellanox InfiniHost III Ex
+adapters. You can find the detailed hardware configurations below.
+
+#### _Ares Cluster_
+
+The Ares cluster is composed of one rack of compute nodes. All the nodes share a 48TB RAID-5 storage pool comprised of eight 8TB 7200K SAS hard drives. Nodes in each rack are connected with
+40Gbps Ethernet with RoCE support. One 200Gbps uplink connects two racks of nodes. The compute rack consists of
+one ThinkSystem SR650 master node, 32 ThinkSystem SR630 compute nodes. In total, the compute rack has 66 2.2GHz
+Xeon Scalable Silver 4114 processors with boosted frequency up to 3.0GHz, which leads to 660 cores and 1320 threads.
+The master node and the compute nodes are equipped with 96GB and 48GB DDR4-2400 memory, 128GB and 32GB M.2 SSD for
+OS, respectively. 24 compute nodes are equipped with one 250GB M.2 Samsung 960 Evo SSD. The other eight are equipped
+with one 256 GB M.2 Toshiba RD400 SSD. 
+
+Read more in the [Ares User Guide](/docs/category/ares-research-cluster)
+
+#### _HEC Cluster_
+
+The HEC cluster is comprised by 16 Sun Fire X2200 nodes and one Sun Fire X4240 head node. This mini cluster is
+ideal for InfiniBand-related tests. All nodes are connected with InfiniBand network powered by Mellanox InfiniHost
+III Ex adapters. The 5TB RAID-5 storage pool provides the global storage for all the nodes. The X4240 node, serving
+as the master node, is equipped with two quad-core 2.7GHz Opteron 2384 processors, 32GB DDR2-667 memory and two 250GB
+Samsung 860 Evo SATA SSDs in RAID-1 configuration. The X2200 nodes, serving as the compute nodes, are equipped with
+two quad-core Opteron 2376 processors running at 2.3GHz, 16GB DDR2-667 memory, one 100GB OCZ RevoDrive X2 PCIe SSD,
+and one 1TB Seagate 7200K SATA hard drive.
+
+### External Computing Resources
+
+We also have access to the Chameleon Cloud platform. It is consisted with two clusters located in Texas Advanced
+Computing Center (TACC) at Texas and University of Chicago. It has 338 compute nodes connected with 10Gbps Ethernet
+network. Among all compute nodes, 41 of them are connected via InfiniBand as well. Each compute node has four 6-core
+(12 threads) Intel Xeon E5-2670 v3 "Haswell" processors and 128GiB RAM. There are also 24 storage nodes with 16 2TB
+hard drives and 20 GPU nodes. In total, the Chameleon Cloud platform has 13,056 cores, 66 TiB of RAM, and 1.5PB of
+configurable storage.
+
+## Conferences
+
+- [ACM International Conference on Computing Frontiers](https://computingfrontiers.org/)
+- [ACM International Symposium on High-Performance Parallel and Distributed Computing (HPDC)](http://www.hpdc.org/)
+- [ACM SIGMETRICS/IFIP Performance](https://www.sigmetrics.org/)
+- [ACM SIGMOD/PODS International Conference on Management of Data (SIGMOD)](http://sigmod.org/)
+- [ACM Symposium on Cloud Computing (SoCC)](http://acmsocc.org/)
+- [ACM Symposium on Operating Systems Principles (SOSP)](http://www.sosp.org/)
+- [ACM Symposium on Parallelism in Algorithms and Architectures (SPAA)](https://spaa.acm.org/)
+- [ACM Symposium on Principles of Distributed Computing (PODC)](https://www.podc.org/)
+- [ACM/SIGDA International Symposium on Field-Programmable Gate Arrays (FPGA)](https://www.isfpga.org/)
+- [European Conference on Computer Systems (EuroSys)](https://www.eurosys.org/)
+- [ISC High Performance (ISC-HPC)](https://www.isc-hpc.com/)
+- [International Conference on Algorithms and Architectures for Parallel Processing (ICA3PP)](https://link.springer.com/conference/ica3pp)
+- [International Conference on Distributed Computing Systems (ICDCS)](https://ieeexplore.ieee.org/xpl/conhome/1000213/all-proceedings)
+- [International Conference on Supercomputing (ICS)](http://www.ics-conference.org/)
+- [International European Conference on Parallel and Distributed Computing (Euro-Par)](https://euro-par.org)
+- [Principles and Practice of Parallel Programming (PPoPP)](https://www.ppopp.org/)
+- [The IEEE International Conference on Cluster Computing (CLUSTER)](http://www.clustercomp.org/)
+- [The IEEE International Conference on High Performance Computing, Data, and Analytics (HiPC)](http://hipc.org/)
+- [The IEEE International Parallel & Distributed Processing Symposium (IPDPS)](http://www.ipdps.org/)
+- [The IEEE International Symposium on High-Performance Computer Architecture (HPCA)](https://hpca-conf.org/)
+- [The IEEE/ACM International Conference on Big Data Computing, Applications and Technologies (BDCAT)](https://bdcat-conference.org/)
+- [The IEEE/ACM International Symposium on Cluster Computing and the Grid (CCGRID)](https://ieeexplore.ieee.org/xpl/conhome/1000093/all-proceedings)
+- [The IEEE/ACM International Symposium on Microarchitecture (MICRO)](https://microarch.org/)
+- [The International Conference for High Performance Computing, Networking, Storage, and Analysis (SC)](https://supercomputing.org/)
+- [The International Conference on High Performance and Embedded Architectures and Compilers (HiPEAC)](https://www.hipeac.net)
+- [The International Conference on Parallel Architectures and Compilation Techniques (PACT)](https://ieeexplore.ieee.org/xpl/conhome/1000535/all-proceedings)
+- [The International Symposium on Computer Architecture (ISCA)](https://iscaconf.org/)
+- [The International Symposium on Computer Performance, Modeling, Measurements and Evaluation (PERFORMANCE)](https://performance2023.sciencesconf.org/)
+- [The International Symposium on High Performance Chips (HOT CHIPS)](https://www.hotchips.org/)
+- [USENIX Conference on File and Storage Technologies (FAST)](https://www.usenix.org/conferences/byname/146)
+
+## Journals
+
+- [Cluster Computing](http://www.springer.com/computer/communication+networks/journal/10586)
+- [Concurrency and Computation: Practice and Experience](https://www.wiley.com/en-us/Concurrency+and+Computation%3A+Practice+and+Experience-p-9780JNRL00556)
+- [Distributed Computing](https://www.springer.com/journal/446)
+- [Distributed and Parallel Databases](https://www.springer.com/journal/10619)
+- [IEEE Communications](http://www.comsoc.org/commag)
+- [IEEE Computer](http://www.computer.org/computer)
+- [IEEE Concurency](http://ieeexplore.ieee.org/xpl/RecentIssue.jsp?punumber=4434)
+- [IEEE Internet Computing](http://www.computer.org/internet)
+- [IEEE Micro](http://www.computer.org/micro)
+- [IEEE Network](http://www.comsoc.org/netmag)
+- [IEEE Pervasive Computing](http://www.computer.org/pervasive)
+- [IEEE Transactions on Computers](http://www.computer.org/tc)
+- [IEEE Transactions on Dependable and Secure Computing](http://www.computer.org/tdsc)
+- [IEEE Transactions on Parallel and Distributed Systems](http://www.computer.org/tpds)
+- [International Journal of High Performance Computing Applications](http://hpc.sagepub.com/)
+- [International Journal of High Speed Computing](https://www.worldscientific.com/worldscinet/ijhsc)
+- [International Journal of Web Services Research](https://dblp.uni-trier.de/db/journals/jwsr/index.html)
+- [Journal of Computer Science and Technology](http://jcste.ict.ac.cn/)
+- [Journal of Grid Computing](https://www.springer.com/journal/10723/)
+- [Journal of Performance Evaluation](http://www.elsevier.com/locate/peva)
+- [Parallel Computing](http://www.journals.elsevier.com/parallel-computing/)
+- [SIAM Journal on Scientific Computing](https://epubs.siam.org/journal/sjoce3)

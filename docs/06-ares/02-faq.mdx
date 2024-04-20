@@ -1,0 +1,212 @@
+---
+title: FAQ
+---
+
+# FAQ
+
+## Basics
+
+### Can I login with a password?
+
+No. we only allow login via ssh keys. Send your public ssh key to the Ares system admin
+
+### I can login to the headnode, I can make a slurm reservation, but when I try to ssh to said node I get "permission denied"                                                                                        
+
+You need to make the SSH keys for your `$USER`. You can do this the same way you did using `ssh-keygen`. Use the default key name and leave it without the password.                                                 
+This is the key that you/your apps/mpi will use to ssh to the node.                                                                                                                                                  
+Finally, run `cat ~/.ssh/id_rsa.pub >> ~/.ssh/authorized_keys`   
+
+### Why can’t I login with correct credentials?
+
+Ares uses fail2ban to block offensive hosts to secure the server. Any IP that fails to login 5 times in the last 50 days will be blocked from accessing Ares for 24h. If you are blocked, please contact the system admin to unblock yourself.
+
+### How to solve “Too many authentication failures error”?
+
+It might be caused by too many SSH keys on your machine. You can try to add "-o IdentitiesOnly=yes" to your SSH command or client.
+
+### How to allocate nodes for my test?
+
+Slurm is the workload and resource manager in Ares. You must have an active job on nodes to be able to access any nodes. Here are some example commands, please check the slurm cheat sheet for more details about slurm. Please notice that the nodes are identified by the hostnames for low-speed networks (e.g., ares-comp-01). Hostnames for high-speed networks are not used by SLURM.
+Check node status : `sinfo`
+Check node status with a better look : `smap`
+Check job queue : `squeue`
+Cancel allocated job : `scancel JOBID`
+Allocate a job without opening a new shell (this is recommended since the job will not be revoked after accidentally exiting the allocated shell) : `salloc -N 1 --no-shell`
+Allocate a job with 4 specific compute nodes : `salloc -N 4 -p compute --nodelist=ares-comp-[8-10,13] --no-shell`
+Allocate a job with 16 tasks on 4 nodes (other jobs may be allocated on the same nodes) : `salloc -n 16 -N 4 --no-shell`
+Current wall time limit of a job is 48h. By default, a job will be terminated 48h after it starts. If you need to extend your running job, please contact the System Admin
+
+### Can I reserve the nodes for my tests for a longer time?
+
+Yes. Please contact the system admin to request node reservation. Once your reservation is approved, you will receive an email with a reservation ID. Then you can add `--reservation=reservation_id` to your allocation command to use your reservation.
+
+### Can I jump in front of the job queue?
+
+We follow FCFS policy in the resource scheduling. Users cannot change the priority of their jobs and jump in front of the job queue. You can, however, contact the users whose jobs are in front of you to negotiate a way to prioritize your job. You may also negotiate with other users about how to time sharing the nodes instead of exclusive allocation. You can do it by contacting each user specifically. You can find the names and contacts of all the users here. If you have urgent jobs to run, please contact the admin at `grc<plus>aresadmin<at>iit<dot>edu`.
+
+### What are the roles of different nodes (master, compute)?
+
+Master node is used as the login node. It is also supposed to be used for edit, compile and GUI-related commands. Any heavy workload should not be run on the master node. Please use compute nodes instead.
+
+### Is this cluster homogeneous?
+
+No.
+In compute rack, 8 nodes (ares-comp-[01-08]) have Samsung 960 Evo 250GB NVMe SSD. The other 24 compute nodes (ares-comp-[09-32]) have Toshiba OCZ RD400 256GB NVMe SSD. In addition, each compute node has one Seagate 1TB SATA model LM049-2GH172 HDD, and one Samsung 860 Evo 512GB SATA SSD.
+Lastly, the network connections between each pair of nodes could be different. All nodes are equipped with one Mellanox 40Gbps adapter.
+
+### How to switch between high-speed and low-speed networks?
+
+As shown in figure, each compute node has one high-speed (40Gbps) Ethernet and one low-speed (1Gbps) Ethernet. You can add -iface enp47s0 to your mpiexec command to explicitly use high-speed network. You can also switch between two networks with different hostnames. A postfix -40g  is added to standard hostname to distinguish two networks. For example, you can access compute node 10 from high-speed and low-speed networks using ares-comp-10-40g and ares-comp-10, respectively.
+
+### How is the inter-job/user interference?
+
+By default, nodes are shared by all users. Nodes which you are assigned to could be allocated to other users as long as remaining resources (e.g., CPU, memory) match the job requirement. You can avoid it by adding `--exclusive` to your job allocation command. Please use this feature only when necessary.
+
+### How to run my test?
+
+You are free to submit your job using sbatch, mpirun/mpiexec command, or your own scripts in an interactive session. For example, you can submit an MPI job script using sbatch. You also can allocate nodes using salloc, SSH to them, and use them however you want. The global home directory is visible on all nodes. You can prepare your codes/scripts/configuration on the master node and run them on any allocated nodes.
+If you are sensitive to NFS access interference from other users or you want to get the best data access performance, you can copy all your stuff to local directory (`/mnt/{nvme|ssd|hdd}/$USER`), and do everything locally. However, please make sure you clean them to free up space for other users after your test.
+
+## Toolchains, modules, and applications
+
+### What toolchains are available?
+
+We use a basic Ubuntu 22.04 stack. We provide modules for the user to load and use. The user is also free to install toolchains using `spack`.
+
+### What are modules?
+
+Modules are a system for managing software environments on Unix-like systems. They allow users to easily load and unload software packages and their associated environment settings.
+
+### How do I use modules?
+
+Modules are managed through module commands, such as `module avail` to see available modules, `module load` to load a module, and `module unload` to remove a module from your environment.
+
+### What is Lmod?
+
+Lmod is one implementation of the module system. It provides additional features and enhancements over traditional module systems, making it easier to manage software environments.
+
+### How do I find out what modules are available?
+
+You can use the `module avail` command to see a list of available modules on your system.
+
+### How do I load a module?
+
+To load a module, use the `module load` command followed by the name of the module you want to use. For example, `module load mpich` would load the MPICH compiler.
+
+### How do I unload a module?
+
+To unload a module, use the `module unload` command followed by the name of the module you want to remove from your environment. For example, `module unload gcc` would remove the GCC compiler.
+
+### Can I see what modules are currently loaded?
+
+Yes, you can use the `module list` command to see a list of modules currently loaded in your environment.
+
+### How do I search for specific modules?
+
+You can use the `module spider` command followed by a keyword to search for modules matching that keyword. For example, `module spider python` would search for Python-related modules.
+
+### Can I save my currently loaded modules for future sessions?
+
+Yes, you can use the `module save` command followed by a name to save your currently loaded modules. Later, you can use `module restore` followed by the same name to restore those modules in future sessions.
+
+### How do I get more information about a specific module?
+
+You can use the `module show` command followed by the name of the module to see detailed information about it, including its dependencies and environment changes.
+
+### Can I customize my module environment?
+
+Yes, you can create your own module files or modify existing ones to customize your environment. You can maintain module files in a directory you have access to, then update your user environment accordingly.
+
+**Adding User Modules**:
+To add your own modules, create a module file in a directory you have access to (e.g., ~/modules). Each module file should define the module's name, version, dependencies, and environment variables. Once the module file is created, update the module path to include the directory containing your modules.
+
+**Updating User Environments**:
+To update your user environment with custom modules, add the directory containing your modules to the `MODULEPATH` environment variable. You can do this by modifying your shell's configuration file (e.g., ~/.bashrc, ~/.bash_profile, ~/.zshrc) and adding a line like:
+```bash
+export MODULEPATH=~/modules:$MODULEPATH
+```
+Save the file and reload your shell or run `source ~/.bashrc` (or the appropriate configuration file for your shell) to apply the changes.
+
+**Maintaining Module Files**:
+To maintain your module files, regularly update them with any changes or new modules. Ensure that the module files are properly formatted and contain accurate information about each module. Organize your module files in a directory structure that makes sense for your needs and access permissions.
+
+### Where can I find help with modules and Lmod?
+
+You can use the `module help` command followed by a specific command name to get help with that command. Additionally, many systems have documentation or support resources available for modules and Lmod.
+
+### How to run commands with root privilege permission?
+
+No normal user can have root permission on the master node. You can suggest the system admin your list of commands that people with similar research topics as you may need to run as root. The system admin will consider adding them to the list.
+
+### What to do if I find some packages are missing?
+
+You can send email to the System Admin to request for new packages. The system admin will consider installing them. Please provide the package name.
+
+### How to use node-local storage media?
+
+Since Ares is heterogenous, different nodes have different node-local storage.
+Ares has a global shared NFS across the whole cluster which is mounted at /home. A symbolic link to the global NFS is also created at /mnt/common.
+Each compute node has one local NVMe SSD, one SATA SSD, and one SATA HDD. They are mounted at /mnt/nvme, /mnt/ssd and /mnt/hdd, respectively. Every user has local directories in `/mnt/nvme/$USER`, `/mnt/ssd/$USER`, and `/mnt/hdd/$USER` on each compute node.
+
+## OrangeFS
+
+### What is OrangeFS?
+
+OrangeFS is an open-source, scale-out network file system designed for High Performance Computing (HPC) systems¹³. It provides very high-performance access to multi-server-based disk storage, in parallel¹. Here are some key features and details about OrangeFS:
+
+- **User-Level Code**: The OrangeFS server and client are user-level code, making them very easy to install and manage¹.
+- **Part of Linux Kernel**: OrangeFS is part of the Linux kernel as of version 4.6¹.
+- **Parallel Access Methods**: OrangeFS supports diverse methods of parallel access including Linux kernel integration, native Windows client, HCFS-compliant JNI interface to the Hadoop ecosystem of applications, WebDAV for native client access, and direct POSIX-compatible libraries for pre-loading or linking¹.
+- **Optimized MPI-IO Support**: OrangeFS has optimized MPI-IO support for parallel and distributed applications¹.
+- **Research and Development**: The OrangeFS project continues to push the envelope of file system research while bringing high-performance parallel storage to production-ready releases¹.
+
+It's ideal for large storage problems faced by HPC, BigData, Streaming Video, Genomics, and Bioinformatics⁴. It's also the next generation of Parallel Virtual File System (PVFS)³. A parallel file system is a type of distributed file system that distributes file data across multiple servers and provides for concurrent access by multiple tasks of a parallel application³.
+
+Source: Conversation with Bing, 4/4/2024, and edited for clarity
+(1) orangefs.org. https://www.orangefs.org/.
+(2) OrangeFS - Wikipedia. https://en.wikipedia.org/wiki/OrangeFS.
+(3) ORANGEFS — The Linux Kernel documentation. https://www.kernel.org/doc/html/latest/filesystems/orangefs.html.
+(4) OrangeFS. https://orangefs.com/.
+(5) undefined. https://github.com/waltligon/orangefs/discussions.
+
+
+### How can I use OrangeFS?
+
+Simple! 
+1. You load the precompiled module on ares `module load orangefs`
+2. Generate the configuration for OrangeFS using `pvfs2-genconfig`
+  - The servers you specify must be nodes you have an allocation. You can change the server names and relaunch between allocations, BUT a config for 4 nodes cannot be used for a config for lesser or greater than 4 nodes
+3. Load up the servers and mount them on the clients!
+
+### How can I "load up the servers and mount them on the clients" on compute nodes?
+
+Make sure you have the necessary sudo permission. Load the `orangefs` module.
+Provide the orangefs configuration file, the server, and client list file, and the mount location
+```bash
+ares-orangefs-deploy <conf file> <server list> <client list> <mount_loc>
+```
+Example server file
+
+```
+ares-comp-01-40g
+ares-comp-23-40g
+```
+
+Example client file
+
+```
+ares-comp-01-40g
+ares-comp-23-40g
+```
+
+It is just a file with each line having a node hostname.
+
+### How can I clean OrangeFS deployment from previous users or myself?
+
+Run
+```bash
+ares-orangefs-terminate <conf file> <server list> <client list> <mount_loc>
+```
+# Report Issue
+
+If you have any issues, with the cluster, or the user guide please contact the system admin at `grc<plus>aresadmin<at>iit<dot>edu` if you find an issue when using this cluster.

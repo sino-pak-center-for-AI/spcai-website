@@ -1,0 +1,91 @@
+---
+title: "WisIO: Automated I/O Bottleneck Detection via Multi-Perspective Views for HPC Workloads"
+---
+
+import ProjectBadges from "@site/src/components/projects/ProjectBadges";
+import ProjectPublications from "@site/src/components/projects/ProjectPublications";
+
+<p>
+  <img
+    src={require("@site/static/img/projects/wisio/logo.png").default}
+    width="200"
+  />
+</p>
+
+# WisIO: Automated I/O Bottleneck Detection via Multi-Perspective Views for HPC Workloads
+
+<ProjectBadges projectId="wisio" />
+
+Highly data-dependent HPC workloads create pressure on storage systems. With increasing storage
+diversity in modern HPC systems, complexity challenges users and leads to I/O bottlenecks. Earlier
+solutions combined I/O characteristics with expert insight, while recent approaches use performance
+analysis tools. However, the multifaceted problem, with numerous metrics, remains challenging for
+manual resolution, even for experts.
+
+To this end, we introduce **WisIO**, an automated I/O bottleneck detection tool for HPC workloads.
+The key contributions of this work are:
+
+- **Design of WisIO** for automating I/O bottleneck detection
+- **A novel approach** to reducing the search space within I/O traces
+- **A global and extensible rule engine** for bottleneck detection rules
+
+## Motivation
+
+![](/img/projects/wisio/evalmotivation.png)
+
+Out-of-core I/O analysis queries in a memory-limited environment necessitate query and dataset
+optimization for distributed analysis.
+
+## Methodology
+
+- Execute HPC workloads, capture I/O traces via Darshan or Recorder
+- Convert and optimize I/O traces to Parquet format
+- Generate a multi-perspective view with I/O characteristics
+- Compute bottleneck severity scores and produce user-friendly text-based diagnoses through a rule-based engine
+
+## Use Case: Montage (Workflow with Complex Dependencies)
+
+![](/img/projects/wisio/evalmontage.png)
+
+- For efficiency, the process IDs are hashed with respect to their node addresses and hostnames
+- Allows us to analyze groups of process IDs effectively
+- 1280 ranks perform 3.2M read and 1.6M write operations
+- Average bandwidth is low (~3MB/s)
+- Multi-perspective analysis takes **42 seconds**
+- Process-based analysis produces diagnoses with specific nodes or apps
+- **14 diagnoses** produced with severity scores between 52-61.4%
+
+## Use Case: CM1 (Simulation with Separate I/O Phases)
+
+![](/img/projects/wisio/evalcm1.png)
+
+- Timestamps are converted into microseconds as indexing in Dask works faster with non-decimal values
+- For precision, the middle point of two timestamp is used in analysis instead of their range
+- 94.6% of I/O time is spent during the first 20 seconds
+- Rank 0 performs 100% of the writes on small files
+- Multi-perspective analysis takes **22 seconds**
+- Time-based analysis produces diagnoses with specific time ranges
+- Above is an actual text-based diagnosis for CM1
+- **20 diagnoses** produced with severity scores between 55-85%
+
+## Use Case: 1000 Genomes (Data-Intensive Workflow)
+
+![](/img/projects/wisio/evalgenome.png)
+
+- The filenames are hashed with respect to folder hierarchy
+- Allows us to analyze file directories effectively
+- There are 21m files and all of them are accessed file-per-process basis
+- Multi-perspective analysis takes **12 minutes**
+- File-based analysis produces diagnoses with specific folder hierarchy
+- **30 diagnoses** produced with severity scores between 54-67.1%
+
+## Publications
+
+<ProjectPublications projectId="wisio" />
+
+## Key Takeaways
+
+- WisIO automates I/O bottleneck detection for HPC workloads
+- WisIO's novel search space reduction approach enable I/O analysis for large-scale I/O traces
+- WisIO's multi-perspective views can detect I/O bottlenecks that might be otherwise overlooked
+- WisIO's extensible rule engine allows users to define custom rules

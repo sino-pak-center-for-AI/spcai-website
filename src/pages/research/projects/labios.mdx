@@ -1,0 +1,109 @@
+---
+title: "LABIOS: A Distributed Label-Based I/O System"
+---
+
+import ProjectBadges from "@site/src/components/projects/ProjectBadges";
+
+<p>
+  <img src={require("@site/static/img/projects/labios/logo.png").default} width="200" alt="Labios Project logo" />
+</p>
+
+# LABIOS: A Distributed Label-Based I/O System
+
+<ProjectBadges projectId="labios" />
+
+## Introduction
+
+**HPC and Big Data** environments have **diverged** over the years,
+resulting in diverging and even **conflicting I/O requirements**.
+
+- **Consistency**: Strong vs. Eventual
+- **File Access**: Shared vs. Independent
+- **Namespace**: Hierarchical vs. Flat
+- **Hardware**: Specialized vs. Commodity
+
+Addressing these challenges is vital to **HPC + Big Data Convergence**,
+as it **enables colocating conflicting I/O workloads** on the same
+cluster without sacrificing performance through **storage bridging**;
+**resource heterogeneity** and **data provisioning** to support
+transparent data operations and conversions for complex hyperconverged
+workloads; **storage malleability** to improve resource utilization and
+job throughput in multi-tenant scenarios.
+
+## Approach
+- **Data Model**
+    - **Labels**, tuple of multiple operations & a pointer to input
+    data
+    - **Storage-independent expression** of application's intent
+- **Label Manager**
+    - **Build** multiple labels based on the request characteristics
+    - Splits or combines labels to **optimal I/O** sizes
+
+- **Content Manager**
+    - Data labels are **temporarily stored** here for async data
+    placement and computations
+    - Represented as a **key-value store**
+- **Label Dispatcher**
+    - **Dispatches** labels to workers
+    - Supports various **scheduling policies**
+    - **Reorder labels** while considering consistency
+## Use Cases
+
+<p>
+  <img src={require("@site/static/img/projects/labios/as_I_O_accelerator.png").default}  alt="Labios deployed for IO Accelerator" width="600" />
+</p>
+
+- Labios for I/O acceleration
+    - Fast distributed cache for temporary I/O
+    - Ideal for Hadoop workloads with node-local I/O
+
+<p>
+  <img src={require("@site/static/img/projects/labios/as_I_O_fwl.png").default}  alt="Labios deployed for IO forwarding" width="600" />
+</p>
+
+- Labios for I/O forwarding
+    - Ideal for asynchronous I/O
+    - Apps pass data to Labios
+    - Labios interacts with remote storage
+    - Scalability limited to the size of I/O forwarding layer
+
+<p>
+  <img src={require("@site/static/img/projects/labios/as_I_O_buffer.png").default}  alt="Labios deployed for IO buffering" width="600" />
+</p>
+
+- Labios for I/O buffering
+    - Fast temporary storage for persistent I/O
+    - Data sharing between programs
+    - In-situ visualization and analysis
+    - Deep learning training pipelines
+
+<p>
+  <img src={require("@site/static/img/projects/labios/as_Storage.png").default}  alt="Labios deployed for remote storage" width="600" />
+</p>
+
+- Labios as remote storage
+    - Fast permanent storage
+    - Transparently support storage hierarchies
+    - Improved resource utilization and energy due to storage malleability
+    - Opportunities for live reconfiguration, crash-restart, and code upgrades
+
+
+
+## Preliminary Results
+<p>
+  <img src={require("@site/static/img/projects/labios/storage-bridging.png").default}  alt="A bar chart (X-axis: System[Hadoop/Labios]-Device[Disk/Memory]-Configurations[baseline/Local/Remote]) displaying the count of various memory types, considering Storage Bridging on Map-Reduce workload with 3072 processes at 32MB/proc." width="600" />
+</p>
+
+Storage Bridging on **Map-Reduce workload**, 3072 processes at 32MB/proc
+
+<p>
+  <img src={require("@site/static/img/projects/labios/straight-resources.png").default} alt="Bar graph, x-axis is number of processes (384, 768, 1536, 3072), y-axis is the overall time in seconds ranging from 0 to 1800 with a step of 200. A bar chart displaying the count of various simulation types, including Storage Bridging on Map-Reduce workload with 3072 processes at 32MB/proc." width="600" />
+</p>
+
+Resource Heterogeneity on **HACC workload**, 3072 processes, 16 timesteps
+
+## Key Takeaways!
+Labios allows for **Data-centric system design** with up to **6x boost** in I/O performance and **65% reduction** in execution time. This data-centric system approach can allow a more **profound understanding** of how data flows into the system, allowing for **AI-driven I/O optimizations** and **data interoperability**.
+
+
+In collaboration with Sandia and Lawrence Livermore National Laboratories.

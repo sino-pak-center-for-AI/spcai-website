@@ -1,0 +1,8 @@
+bs4
+habanero
+matplotlib
+numpy
+pandas
+# pyarrow
+serpapi
+thefuzz

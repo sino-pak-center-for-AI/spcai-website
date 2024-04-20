@@ -1,0 +1,210 @@
+---
+title: User Guide
+---
+
+# Ares User Guide
+
+**TL;DR**:
+
+*   Access the cluster via SSH using your username and SSH key.
+    *   SSH key authentication is required for logins.
+*   Submit batch jobs with `sbatch`.
+*   Manage software modules with Lmod using `module load` and `module avail`.
+    *   Use Spack for setting up custom toolchains.
+*   sudo access is limited and granted for specific purposes.
+*   Do **NOT** reach out to the admin without reading the rest of the guide.
+
+## Introduction
+
+Welcome to the Ares cluster user manual. Ares is a high-performance computing (HPC) cluster running on Ubuntu 22.04. This guide will provide you with the necessary information to effectively utilize the resources available on the cluster.
+Your system administrator can be reached via `grc<plus>aresadmin<at>iit<dot>edu`, and someone will get back to you.
+
+## Resource Information
+
+The Ares cluster is composed of one rack of compute nodes. All the nodes share a 48TB RAID-5 storage pool comprised of eight 8TB 7200K SAS hard drives. Nodes in each rack are connected with
+40Gbps Ethernet with RoCE support. The compute rack consists of one ThinkSystem SR650 master node, 32 ThinkSystem SR630 compute nodes. In total, the compute rack has 66 2.2GHz
+Xeon Scalable Silver 4114 processors with boosted frequency up to 3.0GHz, which leads to 660 cores and 1320 threads.
+The master node and the compute nodes are equipped with 96GB and 48GB DDR4-2400 memory, 128GB and 32GB M.2 SSD for
+OS, respectively. 24 compute nodes are equipped with one 250GB M.2 Samsung 960 Evo SSD. The other eight are equipped
+with one 256 GB M.2 Toshiba RD400 SSD.
+
+### Node Roles
+
+The Head/Master node is for login and light tasks, such as:
+
+*   editing files
+*   scheduling tasks/jobs on slurm
+*   filesystem traversal
+*   downloading files (NOT multiple TBs of data)
+
+If in doubt reach out to the system admin
+
+The comp/compute nodes are for heavy computation and I/O tasks, including compilation.
+
+### Master/login node
+
+*   Host: ares.cs.iit.edu
+*   IP: 216.47.152.168
+*   Protocol: SSH
+*   Port: 22
+*   Shared global home directory: `/mnt/common/$USER` or `/home/$USER`
+
+### Compute nodes
+
+*   Host (low-speed Ethernet): ares-comp-\[01-32]
+*   Host (high-speed Ethernet): ares-comp-\[01-32]-40g
+*   Local NVMe SSD: /mnt/nvme/`$USER`
+*   Local SATA SSD: /mnt/ssd/`$USER`
+*   Local SATA HDD: /mnt/hdd/`$USER`
+
+### Details
+
+| Component | Product                                     |    Capacity   |
+|:---------:|:--------------------------------------------|:-------------:|
+|    CPU    | Intel(R) Xeon(R) Silver 4114 CPU @ 2.20GHz  | 800MHz - 3GHz |
+|   Memory  | System Memory                               |     48GiB     |
+|    NVMe   | ares-comp-\[01-08]: Samsung 960 Evo 250GB.  |     256GB     |
+|     "     | ares-comp-\[09-32]: Toshiba OCZ RD400 256GB |     256GB     |
+|  SATA SSD | Samsung 860 Evo                             |     512GB     |
+|  SATA HDD | Seagate LM049-2GH172                        |      1TB      |
+|  Ethernet |                                             |  10 Gigagbit  |
+| RoCE/RDMA | Mellanox ConnectX-4 Lx 1x40GbE QSFP.        |   40 Gigabit  |
+
+## Accessing the Cluster
+
+To access the machines you need to be on the IIT network, either on-site or via the [IIT-VPN](https://www.iit.edu/ots/access/vpn-remote-access). Then, you can SSH to the master/login node using your IIT assigned username and the SSH key you provided to the system admin. If you encounter any issues with access, please contact the system administrator.
+
+```bash
+ssh username@ares.cs.iit.edu
+```
+
+### SSH Key Authentication
+
+GRC only allows SSH based logins. Ares enforces SSH key authentication for logins. Password authentication is disabled for security reasons. Make sure you have configured SSH keys for your account before attempting to log in.
+
+To make an SSH key:
+
+1.  Run `ssh-keygen`, follow the prompts.
+2.  Send the *Public key* (the file will end with `.pub`) to the Ares System admin
+
+More information can be found [here @ DigitalOcean](https://www.digitalocean.com/community/tutorials/how-to-configure-ssh-key-based-authentication-on-a-linux-server)
+
+### Considerations
+
+Add the following snippet to the `~/.ssh/config` file on your local machine
+
+```config
+Host ares
+        HostName ares.cs.iit.edu
+        User username
+        ControlMaster auto
+        IdentityFile path_to_id_file
+        Compression yes
+        Port 22
+```
+
+After which you can login using
+
+```bash
+ssh ares
+```
+
+## Node allocation and reservation
+
+Slurm is used for job scheduling and resource management on Ares. Below are examples of how to use Slurm commands:
+
+### Allocate nodes interactively
+
+*   Allocate nodes: `salloc`
+    *   Use `-N <number of nodes>` to specify the number of nodes
+    *   Use the `--exclusive` flag if you would not like you nodes to be colocated.
+    *   Use the `-w <comma separated list of nodes>` to specify the specific nodes you would like to reserve.
+
+### Submitting batch jobs
+
+Submit a batch job to the cluster with a job script named `job_script.sh`:
+
+```bash
+sbatch job_script.sh
+```
+
+### Example `sbatch` snippet
+
+```bash
+#!/bin/bash
+#SBATCH --nodes=1
+#SBATCH --time=4:00:00
+#SBATCH --job-name=MyJobName
+<commands to execute>
+```
+
+### Monitoring Jobs with `squeue`
+
+Check the status of your jobs in the queue:
+
+```bash
+squeue -u $USER
+```
+
+### Misc. slurm commands
+
+*   Check node status: `sinfo`
+*   Check job queue: `squeue`
+*   Cancel allocated job: `scancel JOBID`
+
+### Allocation Limitations
+
+The current wall time limit for a job is 48 hours. Contact the sysadmin if you need to extend a running job.
+
+### Allocation Queue Priority
+
+Ares follows a First-Come-First-Served (FCFS) policy. You cannot change job priority but can negotiate with users ahead of you.
+
+## Module Management with Lmod
+
+Lmod is used on Ares to manage software modules. It provides an easy way to load, unload, and switch between different versions of software packages.
+
+To list available modules:
+
+```bash
+module avail
+```
+
+To load a module:
+
+```bash
+module load <module_name>
+```
+
+## Setting Up Custom Toolchains with Spack:
+
+Users have the option to set up custom toolchains using Spack. Spack is a flexible package manager that simplifies the process of installing and managing software packages.
+
+Refer to the Spack documentation for detailed instructions on setting up custom toolchains.
+
+## Escalated privileges
+
+Sudo access on Ares is limited to specific purposes such as clearing caches, mounting OrangeFS, or other restricted administrative tasks. Users are not granted broad sudo privileges.
+Contact the system administrator if you require sudo access for a specific task. Additionally, please note all topics in this subsection require `sudo` permissions.
+
+Services requiring `sudo` permissions:
+
+*   clearing storage cache
+*   deploying node local orangefs deployments
+
+
+### Clearing the storage cache
+
+Load the appropriate module using `module load user-scripts` to bring use the `sudo drop_caches` script, or you can just directly run `sudo /mnt/repo/software/user-scripts/drop_caches`
+
+## First-Timers Section:
+
+*   File Transfer: Use SCP or SFTP for transferring files to and from the cluster.
+*   Data Storage: Utilize designated storage directories for your data. Avoid storing large files in your home directory.
+*   Documentation: Refer to online documentation and resources for additional assistance.
+*   Community Support: Join user forums or mailing lists for community support and collaboration.
+*   Job Monitoring: Regularly check the status of your jobs using squeue to ensure efficient resource utilization.
+
+## More Questions?
+
+Go to our [FAQ](./faq)

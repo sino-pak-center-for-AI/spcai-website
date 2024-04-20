@@ -1,0 +1,99 @@
+---
+title: Members
+---
+
+import FacultyList from "@site/src/components/people/FacultyList";
+import MemberList from "@site/src/components/people/MemberList";
+import faculty from "@site/src/data/faculty";
+import members from "@site/src/data/members";
+
+## Faculty
+
+<FacultyList data={faculty} />
+
+<br />
+
+## Researchers
+
+<MemberList data={members.filter((member) => member.type === "researcher")} />
+
+## Engineers
+
+<MemberList data={members.filter((member) => member.type === "engineer")} />
+
+## Visiting Scholars
+
+<MemberList data={members.filter((member) => member.type === "visiting")} />
+
+## External Collaborators
+
+<MemberList data={members.filter((member) => member.type === "external")} />
+
+## Some of Our Alumni
+
+<div style={{fontSize: "0.875rem"}}>
+
+| Name                        | Dissertation / Thesis                                                                                                                     | Degree | Year | Research Interests                                                                     |
+| --------------------------- | ----------------------------------------------------------------------------------------------------------------------------------------- | ------ | ---- | -------------------------------------------------------------------------------------- |
+| Wiam Amine                  |                                                                                                                                           | M.Sc.  | 2024 | HPC, Distributed Storage                                                               |
+| Hariharan Devarajan         | Towards a self-programmable storage solution in extreme-scale environments                                                                | PhD    | 2021 | HPC, Parallel and Distributed Systems, Parallel I/O Optimizations, Key-Value Storage   |
+| Kun Feng                    | A Multi-level Data Integration Approach for the Convergence of HPC and Big Data Systems                                                   | PhD    | 2020 | HPC, Parallel and Distributed Systems, I/O Optimization, Data Integration              |
+| Anthony Kougkas             | Accelerating I/O using Data Labels: A Contention-Aware, Multi-Tiered, Scalable, and Distributed I/O Platform                              | PhD    | 2019 | HPC, Parallel and Distributed Systems, Cloud Computing, Storage Systems, Object Stores |
+| Eduardo Berrocal            | Improving Distributed Systems with Data Analysis                                                                                          | PhD    | 2017 | Fault Tolerance, Data Consistency                                                      |
+| Sean Wallace                | Power Profiling, Analysis, Learning, and Management for High-Performance Computing                                                        | PhD    | 2017 |                                                                                        |
+| Xu Yang                     | Cooperative Batch Scheduling for HPC Systems                                                                                              | PhD    | 2017 |                                                                                        |
+| Xi Yang                     | An Integrated Data Access System for Big Computing                                                                                        | PhD    | 2016 |                                                                                        |
+| Li Yu                       | Reliability and Energy Analysis for Extreme Scale Systems                                                                                 | PhD    | 2016 |                                                                                        |
+| Yanlong Yin                 | Application-Aware Optimizations for Big Data Access                                                                                       | PhD    | 2014 |                                                                                        |
+| Jingjin Wu                  | Performance Analysis and Optimization of Large-scale Scientific Applications                                                              | PhD    | 2013 |                                                                                        |
+| Hui Jin                     | System Support for Resilience in Large-Scale Parallel Systems: From Checkpointing to MapReduce                                            | PhD    | 2012 |                                                                                        |
+| Wei Tang                    | An integrated job scheduling framework for production supercomputers                                                                      | PhD    | 2012 |                                                                                        |
+| Ziming Zheng                | Log analysis for reliability management in large-scale systems                                                                            | PhD    | 2012 |                                                                                        |
+| Yong Chen                   | A Hybrid Data Prefetching Architecture for Data-Access Efficiency                                                                         | PhD    | 2009 |                                                                                        |
+| Yawei Li                    | Efficient Fault Management in High-Performance Computing                                                                                  | PhD    | 2008 |                                                                                        |
+| Cong Du                     | Dynamic Virtual Private Environment in a Shared Cyberspace                                                                                | PhD    | 2008 |                                                                                        |
+| Surendra Byna               | Server-based Data Push Architecture for Data Access Performance Optimization                                                              | PhD    | 2006 |                                                                                        |
+| Ming Wu                     | System Support of Quality of Service in Shared Network Environments                                                                       | PhD    | 2006 |                                                                                        |
+| Vijay Gurbani               | Service Oriented Computing: Enabling Cross-Network Services between The Internet and The Telecommunications Network                       | PhD    | 2004 |                                                                                        |
+| Kasidit Chanchio            | Efficient Checkpointing in Heterogeneous Collaborative Environments: Representation, coordination, and Automation                         | PhD    | 2000 |                                                                                        |
+| Yu Zhuang                   | Stable, Globally Non-iterative, Non-overlapping Domain Decomposition Methods for the Numerical Solution of Parabolic Evolutionary Systems | PhD    | 2000 |                                                                                        |
+| Kirk Cameron                | Empirical and Statistical Application Modeling Using On-Chip Performance Monitors                                                         | PhD    | 2000 |                                                                                        |
+| Janusz Nosek                | Concurrency and Locality Aware GPGPU Thread Group Scheduling                                                                              | M.Sc.  | 2018 |                                                                                        |
+| Srivatsa H.C.               |                                                                                                                                           | M.Sc.  | 2018 |                                                                                        |
+| Yongen Yu                   | PetaART: Toward Petascale Cosmological Simulations using the Adaptive Refinement Tree (ART) Code                                          | M.Sc.  | 2013 |                                                                                        |
+| Ke Tao                      | Checkpointing Orchestration: Toward a Scalable HPC Fault-Tolerant Environment                                                             | M.Sc.  | 2011 |                                                                                        |
+| Jiexing Gu                  | System Diagnosis and Prognosis of Failures in High-Performance Computing Systems                                                          | M.Sc.  | 2009 |                                                                                        |
+| Sindhu Subramanya           | Optimizing Energy Consumption while Running I/O Intensive Workloads Using DVFS                                                            | M.Sc.  | 2009 |                                                                                        |
+| Dinagar Raghunathan         | Evaluation of Interrupt Handling Mechanisms in Multi-core Environment                                                                     | M.Sc.  | 2009 |                                                                                        |
+| Eduardo Berrocal            | Exploring Pattern based Replacement Policies in MPI-IO Caching                                                                            | M.Sc.  | 2009 |                                                                                        |
+| Huaiyu Zhu                  | Global-aware and Multi-order Context-based Data Prefetching                                                                               | M.Sc.  | 2009 |                                                                                        |
+| Hui Jin                     | Performance under Failures of DAG-based Parallel Computing                                                                                | M.Sc.  | 2008 |                                                                                        |
+| Prerak Shukla               | Virtual Machines in Grid Environments: Dynamic Virtual Machines                                                                           | M.Sc.  | 2008 |                                                                                        |
+| Petre Brotea                | Grid-enabled Migration of Native Processes under Java Virtual Machine Environments                                                        | M.Sc.  | 2008 |                                                                                        |
+| Alaknantha Eswaradass       | Network Bandwidth Predictor (NBP) A System for Online Network Performance Forecasting                                                     | M.Sc.  | 2005 |                                                                                        |
+| Naga Kunderu                | AEGIS: A Security Architecture for Mobile Devices                                                                                         | M.Sc.  | 2004 |                                                                                        |
+| Beulah Kurian               | Grid Eigen Trust, A Framework For Computing Reputation in Grids                                                                           | M.Sc.  | 2003 |                                                                                        |
+| Balamurali Ananthan         | SLA Oriented QoS Management and Provisioning in Virtual Application Service                                                               | M.Sc.  | 2003 |                                                                                        |
+| Dinanath D. Sulakhe         | GNARE-GeNome Analysis Research Environment: a high-throughput server for genome analysis                                                  | M.Sc.  | 2003 |                                                                                        |
+| Patrick Wagstrom            | Scarlet: A Framework for Context Aware Computing                                                                                          | M.Sc.  | 2003 |                                                                                        |
+| Xiaoshan He                 | A QoS Guided Scheduling Model in Grid Environment                                                                                         | M.Sc.  | 2002 |                                                                                        |
+| Rahul Pidaparti             | Matchmaker for Distributed Parallel Computing                                                                                             | M.Sc.  | 2002 |                                                                                        |
+| Antoine Nguyen              | Implementation of Scalable Tridiagonal Solvers for Ocean Simulation on Parallel Supercomputers                                            | M.Sc.  | 2001 |                                                                                        |
+| Zhiqiang Li                 | A Java Client/Server Message Board System                                                                                                 | M.Sc.  | 2000 |                                                                                        |
+| Bo Pan                      | Parallel implementation of Adaptive Wavelet Element method, A MPI Implementation of a Two-Dimensional Wavelet ADI Application             | M.Sc.  | 2000 |                                                                                        |
+| Dhruv Khettry               | Virtual Collaboratory for Numerical Simulation                                                                                            | M.Sc.  | 1999 |                                                                                        |
+| Ramachandran Krishnamoorthi | On-Line Simulation of Materials                                                                                                           | M.Sc.  | 1999 |                                                                                        |
+| Ram Mohan Suryanarayana     | Network Resource Monitoring System                                                                                                        | M.Sc.  | 1999 |                                                                                        |
+| Zhaohua Zhan                | A Java 3D Visualization Environment for Scalable Systems                                                                                  | M.Sc.  | 1998 |                                                                                        |
+| Vittal Krishnamurthy        | Path Restoration in Self-Healing ATM Networks                                                                                             | M.Sc.  | 1998 |                                                                                        |
+| Dongmei He                  | Research interests are in performance modeling and evaluation of advanced hierarchical memory systems                                     | M.Sc.  | 1998 |                                                                                        |
+| Lalitha Kommajosyula        | Development of a LOST (Line-Of-Sight Telemetry) software system for wireless communication                                                | M.Sc.  | 1998 |                                                                                        |
+| Yu Zhuang                   | A Java 3D Visualization Environment for Scalable Systems                                                                                  | M.Sc.  | 1998 |                                                                                        |
+| Zhang Lei                   | Developed a network teaching environment                                                                                                  | M.Sc.  | 1997 |                                                                                        |
+| Qingxu Hou                  |                                                                                                                                           | M.Sc.  | 1997 |                                                                                        |
+| Kasidit Chanchio            |                                                                                                                                           | M.Sc.  | 1996 |                                                                                        |
+| Xin Liao                    |                                                                                                                                           | M.Sc.  | 1996 |                                                                                        |
+| Adnan Haider                |                                                                                                                                           | B.Sc.  | 2018 |                                                                                        |
+| Anthony Fleck               | Empowering Data Management, Diagnosis, and Visualization of Cloud-Resolving Models by Cloud Library upon Spark and Hadoop                 | B.Sc.  | 1997 |                                                                                        |
+
+</div>

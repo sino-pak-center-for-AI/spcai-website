@@ -1,0 +1,67 @@
+---
+title: "DTIO: A Data Task I/O Runtime"
+---
+
+import ProjectBadges from "@site/src/components/projects/ProjectBadges";
+
+<p>
+  <img src={require("@site/static/img/projects/dtio/logo.png").default} width="140" />
+</p>
+
+# DTIO: A Data Task I/O Runtime
+
+<ProjectBadges projectId="dtio" />
+
+In partnership with Argonne National Laboratory, DTIO investigates the use of a task framework for unifying complex I/O stacks and providing features such as resilience, fault-tolerance, and task replay.
+
+## Introduction
+
+- POSIX I/O has problems with scalability due to its strict internal metadata tracking, which requires RAW guarantees
+- **Insight**: A task-based infrastructure gives several advantages over a batch-based infrastructure, which can also apply to I/O tasks
+- Improved scalability via relaxation of POSIX consistency, which allows tasks to execute faster even if it disobeys strict ordering
+- Improved resource utilization via constraint-based task scheduling, which allows tasks to consider load on an executor
+- Improved fault-tolerance via task provenance, which allows replay of tasks in the event of a fault
+- In addition, we aim to leverage hierarchical storage and computational storage techniques to provide an infrastructure that unifies and extends the current I/O stacks
+
+
+## Methodology
+
+<center>
+  <img src={require("@site/static/img/projects/dtio/dtio-arch.png").default} width="600" alt="dtio architecture" title="" class="" />
+</center>
+
+- DTIO Client creates the task and places on a worker, and DTIO servers execute the tasks
+- Composition is generally expected to be done alongside the application (client-side)
+- For scheduling, centralized deployments can collate information from different apps, while multiprocess deployments scale better
+- For workers, dedicated execution resources are the best choice
+
+## Relaxing POSIX consistency to improve scalability
+
+<center>
+  <img src={require("@site/static/img/projects/dtio/posix-scalability.png").default} width="600" alt="POSIX scalability" title="" class="" />
+</center>
+
+- POSIX metadata and consistency guarantees cause performance drops for IOR at scale.
+- Relaxation of POSIX consistency in a task system can come in a few ways.
+- Delay when creating tasks, scheduling tasks, or executing tasks.
+- These ideas are often represented naturally with task queues, as queued tasks need not be dequeued immediately.
+
+## Scheduling constraints to improve resource utilization
+
+- To achieve improved resource utilization, tasks can be scheduled to workers depending on load.
+- Task Status can be unscheduled, scheduled, or completed.
+- A simple constraint: schedule a task to the executor which is currently running the fewest tasks.
+- More complex constraint: track the I/O size of tasks to each executor and schedule to the executor with the lowest I/O load.
+
+## Task provenance to improve fault tolerance
+
+<center>
+  <img src={require("@site/static/img/projects/dtio/queue-visualization.png").default} width="600" alt="Tasks as a record of control flow, with task replays visualized for write kernel and fault recovery" title="" class="" />
+</center>
+
+- Tasks are a record of control flow, and therefore it is possible to use tasks in the event of a fault to restore the state of storage.
+- Best to store tasks in a separate database and maintain their status.
+- If a separate database is not desirable, workers can provide a record of task execution, though this necessitates a method of determining which worker has which task.
+- Statuses, alongside task timestamps, can permit task replay in the event of a fault.
+- Fault recovery may not need to replay writes, supposing they've already been persisted to disks.
+- Task replay also has other usecases outside of fault tolerance, such as generating I/O kernels or responsibility identification (blaming).

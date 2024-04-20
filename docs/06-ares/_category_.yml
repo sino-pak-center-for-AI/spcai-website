@@ -1,0 +1,4 @@
+label: "Ares Research Cluster"
+link:
+  type: generated-index
+  description: "Ares is a high-performance computing (HPC) cluster maintained by GRC."

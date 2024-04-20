@@ -1,0 +1,130 @@
+---
+title: "Viper: A High-Performance I/O Framework for Transferring Deep Neural Network Models"
+---
+
+import ProjectBadges from "@site/src/components/projects/ProjectBadges";
+
+<p>
+  <img src={require("@site/static/img/projects/viper/logo.png").default} width="200" />
+</p>
+
+# Viper: A High-Performance I/O Framework for Transferring Deep Neural Network Models
+
+<ProjectBadges projectId="viper" />
+
+Within a DL workflow, the scientific AI application and the inference serving system typically communicate 
+the DNN models through a model repository (e.g., PFS). However, this method may result in high model update 
+latency due to I/O bottlenecks of PFS and high model discovery latency due to the fixed-interval pull-based 
+model detection mechanism. Moreover, both continuous learning and the scenario that consumer has a limited 
+time window for inferencing increases the model update frequency between producers and consumers. Model update 
+frequency affects both training and inference performance. Viper is a high-performance I/O framework aiming 
+to accelerate the model exchange, and to find an optimal model update schedule to achieve high inference 
+performance while keeping low training cost.
+
+## Background
+
+In the traditional deep learning (DL) workflow:
+
+- Producer (Scientific AI Application) typically trains a DNN model offline with a fixed set of input data and then persists the trained model to a model repository for future use
+- Consumer (Inference Serving System) loads the pre-trained DNN model from the model repository and offers online inference queries for end-user applications 
+
+However, this offline training is not an ideal choice in two scenarios:
+- **Scenario 1: ** Modern scientific DL workflows often operate in dynamic environments where new data is constantly changing and accumulating over time.
+    - To adapt to data changes, continuous learning is utilized to continuously (re)-train a DNN model by using some online techniques.
+    - Continuous learning implies the continuous deployment of the DNN model to keep the model up-to-date
+- **Scenario 2: ** The consumer may have a limited time window for inferences, it may need to start inferencing after the warmup phase in model training on the producer side
+    - Producer continues training the model while the consumer conducts inferences
+    - This requires the intermediate DNN models to be consistently delivered from the producer to the consumer during training to achieve high inference performance
+
+<center>
+    <p>
+        <img src={require("@site/static/img/projects/viper/scenario2.png").default} width="600" />
+    </p>
+</center>
+
+Both scenarios **increase the model update frequency** between producers and consumers.
+
+## Motivation
+<center>
+    <p>
+        <img src={require("@site/static/img/projects/viper/viper_motivation.png").default} width="600" />
+    </p>
+</center>
+
+1. Model update frequency **affects both training and inference performance**, since a model update operation involves both model checkpointing and model data delivery.E.g.,
+    - Frequent model updates can enhance inference performance but may slow down training
+    - Infrequent model updates may pose less overhead on training but may degrade the overall inference model accuracy
+2. Currently, Scientific AI Applications and Inference Serving Systems communicate through a model repository (e.g., PFS), as depicted in Figure (a). This communication method may result in:
+    - **High model update latency** due to the I/O bottlenecks caused by concurrent, uncoordinated, small I/O accesses to PFS
+    - **High model discovery High model discovery latency on consumers** due to the static fixed-interval pull-based (e.g., polling) detection mechanism 
+
+Thus, there is a need to 1) **balance the trade-off** between training and inference performance; 2) **accelerate model data discovery and delivery** between producers and consumers (Figure b).
+
+## Approach
+<center>
+    <p>
+        <img src={require("@site/static/img/projects/viper/high_level_design.png").default} width="600" />
+    </p>
+</center>
+
+Viper is a high-performance I/O framework to accelerate DNN models exchange between
+producers and consumers. It aims to:
+1. **Balance the trade-off between training runtime and inference performance**
+    - Viper builds an **intelligent inference performance predictor** to achieve this object
+        - Can **decide an optimal model checkpoint schedule** between producers and consumers
+        - Supporting two different algorithms for finding the optimal checkpoint schedule
+2. **Accelerate model data transfer**
+    - Viper creates a **novel cache-aware data transfer engine** to speedup model update between producers and consumers
+        - Creating a direct data exchange channel for model delivery and utilizes. E.g., the direct GPU-to-GPU or RAM-to-RAM data transfer strategy
+        - Utilizing a lightweight ublish-subscribe notification mechanism to promptly inform the consumer of the model changes.
+
+<center>
+    <p>
+        <img src={require("@site/static/img/projects/viper/data_transfer.png").default} width="400" />
+    </p>
+</center>
+
+## Evaluation Results
+<center>
+  <h3>End-to-end Model Update Latency</h3>
+  <div style={{ display: 'flex', justifyContent: 'start' }}>
+    <div>
+      <img src={require("@site/static/img/projects/viper/end_to_end_latency.png").default} width="300" />
+    </div>
+    <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+        <ul style={{textAlign: 'left'}}>
+        <li>The Y-axis shows the end-to-end CANDLE-NT3 model update latency in seconds</li>
+        <li>Viper improves model update latency by</li>
+        <ul style={{textAlign: 'left'}}>
+            <li><strong>~10x</strong> via GPU-to-GPU model transfer strategy</li>
+            <li><strong>~3.5x</strong> via RAM-to-RAM model transfer strategy</li>
+        </ul> 
+        </ul>
+    </div> 
+  </div>
+  <h3>Benefits of Low-latency Model Update Strategy</h3>
+  <div style={{ display: 'flex', justifyContent: 'space-between' }}>
+    <div>
+      <img src={require("@site/static/img/projects/viper/benefits_low_latency_strategy.png").default} width="400" />
+    </div>
+    <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+        <ul style={{textAlign: 'left'}}>
+        <li>Application: CANDLE-NT3 model of 4.6GB size</li>
+        <li>The left Y-axis shows cumulative inference loss over 50000 inference requests</li>
+        <li>The right Y-axis shows training overhead added by model checkpointing</li>
+        <li>GPU-to-GPU and RAM-to-RAM model transfer strategies exhibit</li>
+        <ul style={{textAlign: 'left'}}>
+            <li>lower cumulative inference loss</li>
+            <li>less training overhead time</li>
+        </ul> 
+        </ul>
+    </div>  
+  </div> 
+</center>
+
+## Members
+- Jie Ye, Illinois Institute of Technology
+- Jaime Cernuda, Illinois Institute of Technology
+- Bogdan Nicolae, Argonne National Laboratory
+- Anthony Kougkas, Illinois Institute of Technology
+- Xian-He Sun, Illinois Institute of Technology

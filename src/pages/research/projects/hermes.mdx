@@ -1,0 +1,463 @@
+---
+title: "Hermes: Extending the HDF Library to Support Intelligent I/O Buffering for Deep Memory and Storage Hierarchy System"
+---
+
+import ProjectBadges from "@site/src/components/projects/ProjectBadges";
+import ProjectPublications from "@site/src/components/projects/ProjectPublications";
+
+<p>
+  <img src={require("@site/static/img/projects/hermes/logo.png").default} width="200" />
+</p>
+
+# Hermes: Extending the HDF Library to Support Intelligent I/O Buffering for Deep Memory and Storage Hierarchy System
+
+<ProjectBadges projectId="hermes" />
+
+To reduce the I/O bottleneck, complex storage hierarchies have been introduced. However, managing this complexity should not
+be left to application developers. Hermes is a middeware library that automatically manages buffering in heterogeneous storage
+environments.
+
+:::info
+
+Hermes **1.1.0** is now available! [Download now](https://github.com/HDFGroup/hermes/releases) for the latest features and improvements.
+
+:::
+
+## Background
+
+Today's multi-tiered environments demonstrate:
+
+- **Complex data placement among the tiers of a deep memory and storage hierarchy**
+  - Lack of automated data movement between tiers, is now left to the users
+  - Lack of intelligent data placement in the DMSH
+- **Independent management of each tier of the DMSH**
+  - Lack of expertise from the user
+  - Lack of existing software for managing tiers of heterogeneous buffers
+  - Lack of native buffering support in HDF5
+
+Deep memory and storage hierarchy (DMSH) systems requires:
+
+- Efficient and transparent data movement through the hierarchy
+- New data placement algorithms
+- Effective memory and metadata management
+- An efficient communication fabric
+
+## Synopsis
+
+Modern high performance computing (HPC) applications generate massive amounts of data. However, the performance improvement of
+disk based storage systems has been much slower than that of memory, creating a significant Input/Output (I/O) performance gap.
+To reduce the performance gap, storage subsystems are under extensive changes, adopting new technologies and adding more layers
+into the memory/storage hierarchy. With a deeper memory hierarchy, the data movement complexity of memory systems is increased
+significantly, making it harder to utilize the potential of the deep memory and storage hierarchy (DMSH) design.
+
+As we move towards the exascale era, I/O bottleneck is a must to solve performance bottleneck facing the HPC community. DMSHs
+with multiple levels of memory/storage layers offer a feasible solution but are very complex to use effectively. Ideally, the
+presence of multiple layers of storage should be transparent to applications without having to sacrifice I/O performance. There
+is a need to enhance and extend current software systems to support data access and movement transparently and effectively under
+DMSHs.
+
+Hierarchical Data Format (HDF) technologies are a set of current I/O solutions addressing the problems in organizing, accessing,
+analyzing, and preserving data. HDF5 library is widely popular within the scientific community. Among the high level I/O libraries
+used in DOE labs, HDF5 is the undeniable leader with 99% of the share. HDF5 addresses the I/O bottleneck by hiding the complexity
+of performing coordinated I/O to single, shared files, and by encapsulating general purpose optimizations. While HDF technologies,
+like other existing I/O middleware, are not designed to support DMSHs, its wide popularity and its middleware nature make HDF5 an
+ideal candidate to enable, manage, and supervise I/O buffering under DMSHs.
+
+> This project proposes the development of Hermes, a heterogeneous aware, multi-tiered, dynamic, and distributed I/O buffering
+> system that will significantly accelerate I/O performance.
+
+This project proposes to extend HDF technologies with the Hermes design. Hermes is new, and the enhancement of HDF5 is new. We
+believe that the combination of DMSH I/O buffering and HDF technologies is a reachable practical solution that can efficiently
+support scientific discovery.
+
+## Why Hermes?
+
+Hermes will advance HDF5 core technology by developing new buffering algorithms and mechanisms to support:
+
+- **Vertical and Horizontal Buffering in DMSHs**
+  - Here vertical means access data to/from different levels locally and horizontal means spread/gather data across remote
+    compute nodes
+- **Selective Buffering via HDF5**
+  - Here selective means some memory layer, e.g. NVMe, only for selected data
+- **Dynamic Buffering via Online System Profiling**
+  - The buffering schema can be changed dynamically based on messaging traffic
+- **Adaptive Buffering via Reinforcement Learning**
+  - By learning the application's access pattern, we can adapt prefetching algorithms and cache replacement policies at runtime.
+
+A new, multi-tiered, distributed buffering platform that is:
+
+- Hierarchical
+  - Enables, manages, and supervises I/O operations in the Deep Memory and Storage Hierarchy (DMSH)
+- Dynamic
+  - Offers selective and dynamic layered data placement
+- Modular
+  - Is modular, extensible, and performance-oriented
+- Flexible
+  - Supports a wide variety of applications (scientific, BigData, etc)
+
+![Hermes](/img/projects/hermes/hermes.png)
+
+## Contributions
+
+<center>
+  <p>
+    <img src={require("@site/static/img/projects/hermes/contributions.png").default} width="600" />
+  </p>
+</center>
+
+## Architecture
+
+<center>
+
+![Hermes Architecture](/img/projects/hermes/architecture.png)
+
+</center>
+
+- Hermes machine model
+  - Large amount of RAM
+  - Local NVMe and/or SSD device
+  - Shared Burst Buffers
+  - Remote disk-based PFS
+- Fully distributed
+  - Fully scalable deployment on distributed clusters, consisting of node/local end remote shared storage layers
+- Two data paths
+  - Vertical ->within node
+  - Horizontal ->across nodes
+- Hierarchy based on
+  - Access Latency
+  - Data Throughput
+  - Capacity
+
+## Node Design
+
+<center>
+  <p>
+    <img src={require("@site/static/img/projects/hermes/node-design.png").default} width="600" />
+  </p>
+</center>
+
+- Dedicated core for Hermes
+- RDMA-capable communication
+- Can also be deployed in I/O Forwarding Layer
+- Multithreaded Node Manager
+
+## Components
+
+<center>
+  <p>
+    <img src={require("@site/static/img/projects/hermes/design.png").default} width="600" />
+  </p>
+</center>
+
+- Middle-ware library written in C++: Link with applications (i.e., re-compile or LD_PRELOAD) and Wrap-around I/O calls
+- Modular, extensible, performance-oriented
+- Will support: POSIX, HDF5 and MPI-IO
+- Hinting mechanism to pass user's operations
+
+## Objectives
+
+- Being application- and system-aware
+- Maximizing productivity
+- Increasing resource utilization
+- Abstracting data movement
+- Maximizing performance
+- Supporting a wide range of scientific applications and domains
+
+## Design Implications
+
+<center>
+  <p>
+    <img src={require("@site/static/img/projects/hermes/design-implications-894x383.png").default} width="800" />
+  </p>
+</center>
+
+## Evaluation Results
+
+<center>
+  <h2>Hermes Library Evaluation</h2>
+  <div style={{ display: 'flex', justifyContent: 'space-between' }}>
+    <div>
+      <img src={require("@site/static/img/projects/hermes/evaluations/hermes-library-evaluations-436x328.png").default} width="300" />
+    </div>
+    <div>
+      <img src={require("@site/static/img/projects/hermes/evaluations/metadata-management-436x327.png").default} width="300" />
+    </div>
+    <div>
+      <img src={require("@site/static/img/projects/hermes/evaluations/communication-437x328.png").default} width="300" />
+    </div>
+  </div>
+</center>
+
+<center>
+  <h2>Workload Evaluation</h2>
+  <div style={{ display: 'flex', justifyContent: 'space-between' }}>
+    <div>
+      <img src={require("@site/static/img/projects/hermes/evaluations/alternating-compute-io-678x310.png").default} width="450" />
+    </div>
+    <div>
+      <img src={require("@site/static/img/projects/hermes/evaluations/repetitive-read-678x310.png").default} width="450" />
+    </div>
+  </div>
+  <div style={{ display: 'flex', justifyContent: 'space-between' }}>
+    <div>
+      <img src={require("@site/static/img/projects/hermes/evaluations/vpic-678x310.png").default} width="450" />
+    </div>
+    <div>
+      <img src={require("@site/static/img/projects/hermes/evaluations/hacc-678x310.png").default} width="450" />
+    </div>
+  </div>
+</center>
+
+
+## Webinars
+<center>
+  <div style={{ display: 'flex', justifyContent: 'space-between', gap: '10px' }}>
+    <div>
+      <div class="card p-3">
+        <a href="https://www.youtube.com/watch?v=TqusOsC0a-Y" target="_blank">
+          <img src="https://img.youtube.com/vi/TqusOsC0a-Y/0.jpg" alt="Hermes Beta Release" width="280" />
+        </a>
+        <p class="display-7">Hermes Beta Release</p>
+      </div>
+    </div>
+    <div>
+      <div class="card p-3">
+        <a href="https://www.youtube.com/watch?v=2x-VeEc3kmQ" target="_blank">
+          <img src="https://img.youtube.com/vi/2x-VeEc3kmQ/0.jpg" alt="Hermes Update - HDF Group" width="280" />
+        </a>
+        <p class="display-7">Hermes Update - HDF Group</p>
+      </div>
+    </div>
+    <div>
+      <div class="card p-3">
+        <a href="https://www.youtube.com/watch?v=xuh0_h8hi7I" target="_blank">
+          <img src="https://img.youtube.com/vi/xuh0_h8hi7I/0.jpg" alt="Hermes Buffer Organizer - HDF Group" width="280" />
+        </a>
+        <p class="display-7">Hermes Buffer Organizer - HDF Group</p>
+      </div>
+    </div>
+  </div>
+</center>
+
+## Publications
+
+<ProjectPublications projectId="hermes" />
+
+## Members
+
+<div class="row media-row" style={{ display: 'flex', flexWrap: 'wrap', justifyContent: 'space-around', margin: "5px 50px"}}>
+  <div class="" > {/*col-lg-4 col-md-4*/}
+    {/* Member 1 */}
+    <div class="card" style={{flex: '0 0 calc(33.33% - 10px)', margin: '5px', textAlign: 'center', alignItems: 'center'}}> {/* Add mr-3 class for margin-right */}
+      <img src={require("@site/static/img/faculty/sun.jpg").default} width="200" height="200" alt="" title="" className="card-img-top" />
+      <div class="card-body">
+        <h5 class="card-title">Dr. Xian-He Sun</h5>
+        <p class="card-text" style={{textAlign: 'center'}}>
+          <span style={{ fontFamily: "Futura Light Regular" }}>Principal Investigator</span><br />
+          <strong>Illinois Tech</strong>
+        </p>
+        <a href="mailto:sun@iit.edu" class="btn btn-primary">Contact</a>
+      </div>
+    </div>
+  </div>
+
+  <div class="">
+    {/* Member 2 */}
+    <div class="card" style={{flex: '0 0 calc(33.33% - 10px)', margin: '5px', textAlign: 'center', alignItems: 'center', }}> 
+      <img src={require("@site/static/img/faculty/kougkas.jpg").default} width="200" height="200" alt="" title="" className="card-img-top" />
+      <div class="card-body">
+        <h5 class="card-title">Dr. Anthony Kougkas</h5>
+        <p class="card-text" style={{textAlign: 'center'}}>
+          <span style={{ fontFamily: "Futura Light Regular" }}>Technical Lead</span><br />
+          <strong>Illinois Tech</strong>
+        </p>
+        <a href="mailto:akougkas@iit.edu" class="btn btn-primary">Contact</a>
+      </div>
+    </div>
+  </div>
+
+  <div class="">
+    {/* Member 3 */}
+    <div class="card" style={{flex: '0 0 calc(33.33% - 10px)', margin: '5px', textAlign: 'center', alignItems: 'center', }}> 
+      <img src={require("@site/static/img/projects/hermes/Gerd-Heber-300w.jpg").default} width="200" height="200" alt="" title="" className="card-img-top" />
+      <div class="card-body">
+        <h5 class="card-title">Gerd Heber</h5>
+        <p class="card-text" style={{textAlign: 'center'}}>
+          <span style={{ fontFamily: "Futura Light Regular" }}>Co-Principal Investigator</span><br />
+          <strong>HDF Group</strong>
+        </p>
+        <a href="mailto:gheber@hdfgroup.org" class="btn btn-primary">Contact</a>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="row media-row" style={{ display: 'flex', flexWrap: 'wrap', justifyContent: 'space-around', margin: "5px 50px"}}>
+  <div class="" > {/*col-lg-4 col-md-4*/}
+    {/* Member 1 */}
+    <div class="card" style={{flex: '0 0 calc(33.33% - 10px)', margin: '5px', textAlign: 'center', alignItems: 'center'}}> {/* Add mr-3 class for margin-right */}
+      <img src={require("@site/static/img/members/cernuda.jpg").default} width="200" height="200" alt="" title="" className="card-img-top" />
+      <div class="card-body">
+        <h5 class="card-title">Jaime Cernuda</h5>
+        <p class="card-text" style={{textAlign: 'center'}}>
+          <span style={{ fontFamily: "Futura Light Regular" }}>PhD Student @ GRC</span><br />
+          <strong>Illinois Tech</strong>
+        </p>
+        <a href="mailto:jcernudagarcia@hawk.iit.edu" class="btn btn-primary">Contact</a>
+      </div>
+    </div>
+  </div>
+
+  <div class="" > {/*col-lg-4 col-md-4*/}
+    {/* Member 2 */}
+    <div class="card" style={{flex: '0 0 calc(33.33% - 10px)', margin: '5px', textAlign: 'center', alignItems: 'center'}}> {/* Add mr-3 class for margin-right */}
+      <img src={require("@site/static/img/members/bateman.jpg").default} width="200" height="200" alt="" title="" className="card-img-top" />
+      <div class="card-body">
+        <h5 class="card-title">Keith Bateman</h5>
+        <p class="card-text" style={{textAlign: 'center'}}>
+          <span style={{ fontFamily: "Futura Light Regular" }}>PhD Student @ GRC</span><br />
+          <strong>Illinois Tech</strong>
+        </p>
+        <a href="mailto:kbateman@hawk.iit.edu" class="btn btn-primary">Contact</a>
+      </div>
+    </div>
+  </div>
+
+  <div class="" > {/*col-lg-4 col-md-4*/}
+    {/* Member 3 */}
+    <div class="card" style={{flex: '0 0 calc(33.33% - 10px)', margin: '5px', textAlign: 'center', alignItems: 'center'}}> {/* Add mr-3 class for margin-right */}
+      <img src={require("@site/static/img/members/rajesh.jpg").default} width="200" height="200" alt="" title="" className="card-img-top" />
+      <div class="card-body">
+        <h5 class="card-title">Neeraj Rajesh</h5>
+        <p class="card-text" style={{textAlign: 'center'}}>
+          <span style={{ fontFamily: "Futura Light Regular" }}>PhD Student @ GRC</span><br />
+          <strong>Illinois Tech</strong>
+        </p>
+        <a href="mailto:nrajesh@hawk.iit.edu" class="btn btn-primary">Contact</a>
+      </div>
+    </div>
+  </div>
+
+  <div class="" > {/*col-lg-4 col-md-4*/}
+    {/* Member 4 */}
+    <div class="card" style={{flex: '0 0 calc(33.33% - 10px)', margin: '5px', textAlign: 'center', alignItems: 'center'}}> {/* Add mr-3 class for margin-right */}
+      <img src={require("@site/static/img/members/logan.jpg").default} width="200" height="200" alt="" title="" className="card-img-top" />
+      <div class="card-body">
+        <h5 class="card-title">Luke Logan</h5>
+        <p class="card-text" style={{textAlign: 'center'}}>
+          <span style={{ fontFamily: "Futura Light Regular" }}>Software Engineer</span><br />
+          <strong>HDF Group</strong>
+        </p>
+        <a href="mailto:llogan@hawk.iit.edu" class="btn btn-primary">Contact</a>
+      </div>
+    </div>
+  </div>
+
+</div>
+
+## Sponsor
+
+<center>
+<div class="container">
+  <h3 class="mbr-section-subtitle align-center mbr-light mbr-fonts-style display-5">
+              National Science Foundation
+  </h3>
+  <h3 class="mbr-section-subtitle align-center mbr-light mbr-fonts-style display-5">
+              (NSF OCI-1835764)
+  </h3>
+</div>
+
+<div class="container">
+    <figure class="mbr-figure container">
+      <div class="image-block" >
+        <img src={require("@site/static/img/projects/hermes/nsf-600x310.png").default} width="400" alt="Mobirise" title="" class="" />
+      </div>
+    </figure>
+</div>
+</center>
+
+
+
+## FAQ
+
+<div class="container">
+  <div class="card">
+    <div class="card-header">
+      <h4 class="mbr-fonts-style display-7">
+        <span class="sign mbr-iconfont mbri-arrow-down inactive"></span>&nbsp; Q: The DPE policies rely on the fact that users know the behavior of their application in advance which can be a bold assumption, right?
+      </h4>
+    </div>
+    <div class="card-body">
+      <p class="mbr-fonts-style panel-text display-7">
+        A: That is true. We suggest using profiling tools beforehand to learn about the application’s behavior and tune Hermes. Default policy works great.
+      </p>
+    </div>
+  </div>
+</div>
+
+<div class="container">
+  <div class="card">
+    <div class="card-header">
+      <h4 class="mbr-fonts-style display-7">
+        Q: How does Hermes integrate to modern HPC environments?
+      </h4>
+    </div>
+    <div class="card-body">
+      <p class="mbr-fonts-style panel-text display-7">
+        A: As of now, applications link to Hermes (re-compile or dynamic linking). We envision a system scheduler that also incorporates buffering resources.
+      </p>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="card-header">
+      <h4 class="mbr-fonts-style display-7">
+        Q: How are Hermes’ policies applied in multi-user environments?
+      </h4>
+    </div>
+    <div class="card-body">
+      <p class="mbr-fonts-style panel-text display-7">
+        A: Hermes’ Application Orchestrator was designed for multi-tenant environments. This work is described in Vidya: Performing Code-Block I/O Characterization for Data Access Optimization.
+      </p>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="card-header">
+      <h4 class="mbr-fonts-style display-7">
+        Q: What is the impact of the asynchronous data reorganization?
+      </h4>
+    </div>
+    <div class="card-body">
+      <p class="mbr-fonts-style panel-text display-7">
+        A: It can be severe but in scenarios where there is some computation in between I/O then it can work nicely to our advantage.
+      </p>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="card-header">
+      <h4 class="mbr-fonts-style display-7">
+        Q: What is the metadata size?
+      </h4>
+    </div>
+    <div class="card-body">
+      <p class="mbr-fonts-style panel-text display-7">
+        A: In our evaluation, for 1 million user files, the metadata created were 1.1GB.
+      </p>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="card-header">
+      <h4 class="mbr-fonts-style display-7">
+        Q: How to balance the data distribution across different compute nodes especially when the I/O load is imbalanced across nodes?
+      </h4>
+    </div>
+    <div class="card-body">
+      <p class="mbr-fonts-style panel-text display-7">
+        A: Hermes’ System Profiler provides the current status of the system (i.e., remaining capacity, etc) and DPE is aware of this before it places data in the DMSH.
+      </p>
+    </div>
+  </div>
+</div>
